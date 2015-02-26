@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+var debug = require('debug')('nodetest');
+var app = require('../app');
+
+
+app.listen(8080, '172.16.8.234');
+
+
+
+
+/*
+app.set('port', process.env.PORT || 3000);
+
+var server = app.listen(app.get('port'), function() {
+  debug('Express server listening on port ' + server.address().port);
+});
+*/

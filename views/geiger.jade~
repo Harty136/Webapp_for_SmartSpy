@@ -1,0 +1,65 @@
+extends layout
+
+
+block content
+    script(src='http://code.highcharts.com/highcharts.js')
+    script(src='http://code.highcharts.com/highcharts-more.js')
+    script(src='http://code.highcharts.com/stock/modules/exporting.js')
+
+    script(src='javascripts/anytime.js')
+    link(rel='stylesheet' type='text/css' href='stylesheets/anytime.css')
+    link(rel='stylesheet' type='text/css' href='stylesheets/buttons.css')
+
+    script(src='javascripts/2d_graph.js')
+    script(src='javascripts/setSS.js')
+    script(src='javascripts/en_disable_ggr.js')
+    
+    #LiveData(class='graphL')    
+    #container
+      h1.title SMART spy
+      p Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      
+      #grafico(class='graphH')    
+
+      #setStartStop(class='input_form')
+        fieldset
+            input#start(type='text', size='30', value='')
+            input#stop(type='text', size='30', value='')
+            br
+            button(class='pure-button' style='background-color:linen;margin-left:15%' onclick="setStartStop()") 
+             i.fa.fa-cog.fa-lg  Set START and STOP
+    
+    
+
+    #console.console(class='console') Text here
+    #property #{property}
+    p
+     button(class='pure-button' style='background-color:lightblue' onclick="AddDataSerie()") 
+      i.fa.fa-line-chart.fa-lg  LOAD selected data  
+     button(class='pure-button' style='background-color:tomato' onclick="ClearAllData()") 
+      i.fa.fa-close.fa-lg  CLEAR all data
+     button#DataLoaded(class='pure-button' style='background-color:lightgreen' onclick="window.open('/data_table/#{obj.IP}', '_blank');") 
+      i.fa.fa-file-text.fa-lg  Show loaded data
+    p
+       button(class='pure-button' style='background-color:gold' onclick="document.getElementById('MENU').style.display = 'block'")
+        i.fa.fa-gears  OPEN SETUP MENU
+       button(class='pure-button' style='background-color:tomato' onclick="document.getElementById('MENU').style.display = 'none'")
+         i.fa.fa-close  close menu
+       #MENU
+               button#enpg(class='pure-button' onclick="en_1()")
+                i.fa.fa-check-square-o  Enable PG      
+               button#dspg(class='pure-button' onclick="dis_1()") 
+                i.fa.fa-square-o  Disable PG 
+               br
+               button#enss(class='pure-button' onclick="en_2()")
+                i.fa.fa-check-square-o  Enable SS       
+               button#dsss(class='pure-button' onclick="dis_2()")
+                i.fa.fa-square-o  Disable SS
+               br
+               button(class='pure-button' onclick="change_av()")
+                input#AV(type='text', value='#{obj.alarm_value}')
+                i.fa.fa-bug  Change Alarm Value
+               
+
+    
+    

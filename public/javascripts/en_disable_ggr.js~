@@ -1,0 +1,66 @@
+data = {
+        'pg' : 0,
+        'ss' : 0
+        }
+
+
+function en_1() {
+        
+        data.pg=1
+
+        $.ajax({
+            type: 'POST',
+            data: data,
+            dataType: 'text',
+            url: '/en'
+        }).done(function( response ) {
+        document.getElementById("console").innerHTML = (response);
+        });
+};
+
+function dis_1() {
+        
+        data.pg=0
+
+        $.ajax({
+            type: 'POST',
+            data: data,
+            dataType: 'JSON',
+            url: '/en'
+        }).done(function( response ) {
+        
+        document.getElementById("console").innerHTML = (response);
+        });
+};
+
+function en_2() {
+        
+        data.ss=1
+
+        $.ajax({
+            type: 'POST',
+            data: data,
+            dataType: 'JSON',
+            url: '/en'
+        }).done(function( response ) {
+        
+        document.getElementById("console").innerHTML = (response);
+        });
+};
+
+function dis_2() {
+        
+        data.ss=0
+
+        $.ajax({
+            type: 'POST',
+            data: data,
+            dataType: 'JSON',
+            url: '/en'
+        }).done(function( response ) {
+        
+        document.getElementById("console").innerHTML = (response);
+        });
+};
+
+

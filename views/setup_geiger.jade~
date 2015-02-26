@@ -1,0 +1,22 @@
+extends layout
+
+
+block content
+   link(rel='stylesheet' type='text/css' href='stylesheets/buttons.css')
+
+    script(src='javascripts/en_disable_ggr.js')
+    
+    p#property #{property}
+    p
+       button(class='pure-button' onclick="en_1()")
+        i.fa.fa-check-square-o  Enable PG      
+       button(class='pure-button' onclick="dis_1()") 
+        i.fa.fa-square-o  Disable PG 
+       i.fa.fa-arrow-circle-left
+       i.fa.fa-arrow-circle-right
+       button(class='pure-button' onclick="en_2()")
+        i.fa.fa-check-square-o  Enable SS       
+       button(class='pure-button' onclick="dis_2()")
+        i.fa.fa-square-o  Disable SS 
+    
+    

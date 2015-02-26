@@ -1,0 +1,26 @@
+extends layout
+
+block content
+ //meta(http-equiv='refresh', content='5')
+ script(src='javascripts/prop.js')
+    
+ #container
+  h1 SMART Spy
+  h1 Liste rivelatori collegati alla rete
+  h2(style="margin-left:15%") 
+   - for (var j=0; j < k; j++)
+    br
+    i.fa.fa-sign-out 
+     b #{types[j]} list
+     p
+      ul.fa-ul
+       li
+       - for (var i=0; i < l; i++)
+        if list[i].type==types[j]
+         li
+          div(id=list[i].status onmouseover="getProperty(this)") #{list[i].type} : #{list[i].ip} - STATUS: #{list[i].status}
+          br
+         
+
+  #tooltip Revealer PROPERTY: <br/> (mouseover on revealer to get info)
+  #console

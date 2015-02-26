@@ -1,0 +1,103 @@
+var express = require('express');
+var router = express.Router();
+
+var data = new Array();
+var start_i =new Date();
+start_i.setTime(start_i.getTime() - 60*1000);
+var stop_i=new Date();
+var ipgeiger;
+/* GET home page. */
+
+router.get('/', function(req, res) {
+        res.render('index');
+});
+
+router.get('/geiger', function(req, res) {
+        ipgeiger = '172.16.11.143';
+        res.render('geiger', {ip:ipgeiger});
+});
+
+router.get('/data_table', function(req, res) {
+	var agg = data
+	var len = data.length
+        res.render('data_table', { data: agg, l:len });
+});
+
+router.post('/setss', function(req,res) {
+        start_i= new Date(req.body.start.toString());
+        stop_i= new Date(req.body.stop.toString());
+        });
+
+router.post('/en', function(req,res) {
+        var zmq = req.zmq;
+
+        var zmqc = zmq.socket('req'); // zmq client
+		  checkflag=0;
+        zmqc.connect('tcp://'+ipgeiger+':5555');        
+        zmqc.send (JSON.stringify(req.body));
+        zmqc.on('message', function(reply) {
+	        			zmqc.close()
+                	res.send(reply)
+                	checkflag=1;
+                });
+        setTimeout(function () {
+        				if (checkflag==0)
+        				{
+        					zmqc.close()
+        					res.send('*** NO RESPONSE ***')
+        				}
+        			}, 1000)
+        });
+
+// pagina di dati temporanei
+router.get('/atmss', function(req,res) {
+        // GET REDIS CLIENT
+        var client=req.client
+        // GET START
+        var start = start_i.getTime();
+        // GET STOP
+        var stop = stop_i.getTime();
+        // void array to clear data
+        var flag = 0;
+        var tmp = new Array();
+               
+        var keyword = "Geiger:192.168.7.2:"; // ip è falso
+        
+        // GET ALL DATA BETWEEN START AND STOP
+        client.keys(keyword+"*", function(err,keys)
+                {
+                if (err) return console.log(err);
+                read_data(keys,0)
+                }
+        });
+
+        function read_data(keys, i) {
+                if (i < keys.length) {
+                        client.hgetall(keys[i], function (err, obj) {
+                                if (err) console.log(err);
+                                if (obj.time > start && obj.time < stop) {
+                                tmp.push(obj);
+                                data=tmp;
+                                };
+                                i++
+                                read_data(keys, i)
+                        });
+                }
+                else next()
+        }  
+
+
+        function next() {
+                res.json(data);
+                }
+});
+
+
+
+        
+
+module.exports = router;
+
+
+///////////////// CALLBACK FUNCTION
+

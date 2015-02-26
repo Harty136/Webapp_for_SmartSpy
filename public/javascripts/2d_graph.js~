@@ -1,0 +1,167 @@
+var options={
+        chart : {
+            renderTo: 'grafico',
+	    zoomType: 'x',
+            panning: true,
+            panKey: 'ctrl'
+        },
+			credits: {
+				enabled: false
+				},
+        title: {
+            text: 'Title',
+            x: -20 //center
+        },
+        subtitle: {
+            text: 'IP: -',
+            x: -20
+        },
+        xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: {
+                        second: '%Y-%m-%d<br/>%H:%M:%S',
+                        minute: '%Y-%m-%d<br/>%H:%M',
+                        hour: '%Y-%m-%d<br/>%H:%M',
+                        day: '%Y<br/>%m-%d',
+                        week: '%Y<br/>%m-%d',
+                        month: '%Y-%m',
+                        year: '%Y'
+                    }
+        },
+        yAxis: {
+            title: {
+                text: 'Dose (uSh)'
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },
+	
+        tooltip: {
+            pointFormat: "Dose: {point.y:.3f} uSh"
+        },		
+	plotOptions: {
+		line: {
+			dataLabels: {
+				enabled: false
+			},
+			enableMouseTracking: true
+		},
+                series: {
+                        events: {
+                            legendItemClick: function () {
+                                var visibility = this.visible ? 'visible' : 'hidden';
+                                        }
+                                }
+                        }
+	},
+
+			
+			
+        series: [] 
+    };
+
+var series_index=0;
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/////////////////// STARTING FUNCTION //////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+$(function () {
+document.getElementById("DataLoaded").style.display = "none";
+window.onload = function(){ 
+        document.getElementById("loading").style.display = "none" }   
+		
+        var chart = new Highcharts.Chart(options);
+
+document.getElementById("console").innerHTML = (JSON.stringify(options.series));
+        //console.log(options);
+});
+
+
+$(function(){
+        AnyTime.picker( "start");
+        AnyTime.picker( "stop");
+        });
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////// FUNZIONI SCRITTE DA ME //////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+function A() {
+        property=JSON.parse(document.getElementById("property").innerHTML)
+        document.getElementById("console").innerHTML = (property.title);
+}
+
+function AddDataSerie() {
+        document.getElementById("console").innerHTML = ('loading . . .');
+        property=document.getElementById("property").innerHTML 
+        document.getElementById("console").innerHTML = (JSON.Stringify(property));       
+                options.title.text = property.title;
+                options.subtitle.text = property.ip;
+
+        $.getJSON( '/atmss', function( data ) {
+                //SORT DATA BY TIME
+                data.sort(function(a,b) {
+                        return a.time - b.time;
+                });
+
+                // definisco gli oggetti data_series e data_range legati all'indice di serie
+                var data_series= {
+                                "name": "serie #"+series_index,
+                                "data": [],
+                                "zIndex": 1,
+                                "marker": {
+                                        "lineWidth": 3
+                                        },
+                                "_colorIndex": series_index,
+                                "_symbolIndex": series_index
+                             }
+                var data_range= {
+                                "linkedTo": ":previous",
+                                "name": "range",
+                                "type": "arearange",
+                                "data": [],
+                                "lineWidth": 0,
+                                "fillOpacity": 0.3,
+                                "zIndex": 0,
+                                "_colorIndex": series_index
+                             }
+                series_index++;
+                
+                // imposto i valori xy dai dati acquisiti
+                for(var i = 0, len = data.length; i < len; i++) {
+                        x=parseFloat(data[i].time)//+2*60*60;
+                        var xy=JSON.parse('['+x+','+data[i].dose+' ]');
+                        y_meno = parseFloat(data[i].dose)-parseFloat(data[i].error);
+                        y_piu = parseFloat(data[i].dose)+parseFloat(data[i].error);
+                        var xyerr=JSON.parse('['+x+','+y_piu+','+y_meno+' ]');
+                        data_series.data.push(xy);
+                        data_range.data.push(xyerr);
+                }
+                options.series.push(data_series, data_range);
+                var chart = new Highcharts.Chart(options);
+
+                document.getElementById("DataLoaded").style.display = "block";
+                document.getElementById("console").innerHTML = ('loaded '+data.length+' elements');
+        });
+};
+
+////////////////////////////////////////////////////////////////////////////////
+function ClearAllData() {
+        document.getElementById("DataLoaded").style.display = "none";
+        series_index=0;
+        options.series.splice(0);
+        var chart = new Highcharts.Chart(options);
+        document.getElementById("console").innerHTML = (JSON.stringify(options.series));
+        };
+
+

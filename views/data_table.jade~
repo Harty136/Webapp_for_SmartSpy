@@ -1,0 +1,29 @@
+extends layout
+
+block content
+
+ .CSSTable
+     table
+      tr
+        th 
+          | CPM
+        th
+          | dose (uS/h)
+        th
+          | error (uS/h)
+        th
+          | time (ms)
+
+ - for (var i=0; i < l; i++)
+   .CSSTable
+     table
+      tr
+        td 
+          | #{data[i].cpm.toFixed(1)}
+        td
+          | #{data[i].dose}
+        td
+          | #{data[i].error}
+        td
+          | #{data[i].time}
+        

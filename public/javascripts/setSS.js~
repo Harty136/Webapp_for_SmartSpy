@@ -1,0 +1,54 @@
+// Add User
+function setStartStop() {
+    //event.preventDefault();
+
+    // Super basic validation - increase errorCount variable if any fields are blank
+    var errorCount = 0;
+    $('#setStartStop input').each(function(index, val) {
+        if($(this).val() === '') { errorCount++; }
+    });
+
+    // Check and make sure errorCount's still at zero
+    if(errorCount === 0) {
+
+        SS = {
+                "start":$('#setStartStop fieldset input#start').val(),
+                "stop":$('#setStartStop fieldset input#stop').val()
+                }
+
+document.getElementById("console").innerHTML = (JSON.stringify(SS));
+
+        // Use AJAX to post the object to our setss service
+        $.ajax({
+            type: 'POST',
+            data: SS,
+            url: '/setss',
+            dataType: 'JSON'
+        }).done(function( response ) {
+        
+
+            // Check for successful (blank) response
+            if (response.msg === '') {
+
+                // Clear the form inputs
+                $('#setStartStop fieldset input').val('');
+
+                // Update the table
+                //ReadSS();
+
+            }
+            else {
+
+                // If something goes wrong, alert the error message that our service returned
+                alert('Error: ' + response.msg);
+
+            }
+        });
+    }
+    else {
+        // If errorCount is more than 0, error out
+        alert('Please fill in all fields');
+        return false;
+    }
+};
+

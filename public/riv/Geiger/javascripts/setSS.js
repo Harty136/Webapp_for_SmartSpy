@@ -1,0 +1,33 @@
+function setStartStop() {
+    
+    // Super basic validation - increase errorCount variable if any fields are blank
+    var errorCount = 0;
+    $('#setStartStop input').each(function(index, val) {
+        if($(this).val() === '') { errorCount++; }
+    });
+
+    // Check and make sure errorCount's still at zero
+    if(errorCount === 0) {
+
+        SS = {
+                "start":$('#setStartStop fieldset input#start').val(),
+                "stop":$('#setStartStop fieldset input#stop').val()
+                }
+
+        document.getElementById("console").innerHTML = (JSON.stringify(SS));
+        property=JSON.parse(document.getElementById("property").innerHTML)
+
+        // Use AJAX to post the object to our setss service
+        $.ajax({
+            type: 'POST',
+            data: SS,
+            url: '/setss/'+property.IP,
+            dataType: 'JSON'
+        }).done();
+    }
+    else {
+        alert('Riempire entrambi i campi START e STOP');
+        return false;
+    }
+};
+

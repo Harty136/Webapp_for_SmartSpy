@@ -1,0 +1,39 @@
+doctype html
+html
+  head
+        title smart-SPY
+        script(src='http://code.jquery.com/jquery-1.11.1.min.js')
+          
+        link(rel='stylesheet' type='text/css' href='stylesheets/font-awesome/css/font-awesome.min.css')
+
+        link(rel='stylesheet' type='text/css' href='stylesheets/style.css')
+        
+        //meta(http-equiv='refresh', content='5')
+  body
+  
+   nav
+    ul
+        li
+          a(href='/') Home
+        li
+          a(href='#') Menu
+          ul
+            li
+              a(href='#') Prova
+            li
+              a(href='#') Asd
+            li
+              a(href='#') Ciao
+        li
+          a(href='#') Geiger
+          ul
+            li
+              a(href='/riv/Geiger/172.16.11.143') 172.16.11.143
+              ul
+               li
+                a(href='/data_table/172.16.11.143') Loaded Data
+            li
+              a(href='#') 172.16.11.148
+        li
+          a(href='#') Credits
+   block content
